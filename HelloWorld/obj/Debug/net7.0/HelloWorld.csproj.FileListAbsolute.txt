@@ -1,0 +1,15 @@
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/bin/Debug/net7.0/HelloWorld
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/bin/Debug/net7.0/HelloWorld.deps.json
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/bin/Debug/net7.0/HelloWorld.runtimeconfig.json
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/bin/Debug/net7.0/HelloWorld.dll
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/bin/Debug/net7.0/HelloWorld.pdb
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.csproj.AssemblyReference.cache
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.AssemblyInfoInputs.cache
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.AssemblyInfo.cs
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.csproj.CoreCompileInputs.cache
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.dll
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/refint/HelloWorld.dll
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.pdb
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/HelloWorld.genruntimeconfig.cache
+/Users/ciarancrowley/Dev/C#/c#-learning/HelloWorld/obj/Debug/net7.0/ref/HelloWorld.dll
