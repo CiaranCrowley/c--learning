@@ -4,6 +4,7 @@ namespace HelloWorld.Models
   {
     // private string _motherboard;
     public string Motherboard { get; set; } = "";
+
     public int CPUCores { get; set; }
     public bool HasWifi { get; set; }
     public bool HasLTE { get; set; }

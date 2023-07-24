@@ -1,19 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using System;
-using System.Data;
 using Dapper;
 using HelloWorld.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace HelloWorld // Note: actual namespace depends on the project name.
 {
-
-
   internal class Program
   {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-
       string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true;";
 
       IDbConnection dbConnection = new SqlConnection(connectionString);
@@ -22,7 +18,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
 
       DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
 
-      Console.Write(rightNow);
+      Console.WriteLine(rightNow);
 
       Computer myComputer = new Computer()
       {
@@ -33,9 +29,44 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
         Price = 943.87m,
         VideoCard = "RTX 2060"
       };
-      Console.WriteLine(myComputer.Motherboard);
 
+      string sql = @"INSERT INTO TutorialAppSchema.Computer (
+        Motherboard,HasWifi,HasLTE,ReleaseDate,Price,VideoCard
+       ) VALUES ('" + myComputer.Motherboard
+       + "','" + myComputer.HasWifi
+       + "','" + myComputer.HasLTE
+       + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
+       + "','" + myComputer.Price
+       + "','" + myComputer.VideoCard
+       + "')";
+
+      Console.WriteLine(sql);
+
+      int result = dbConnection.Execute(sql);
+
+      Console.WriteLine(result);
+
+      string sqlSelect = @"SELECT Computer.Motherboard,
+        Computer.HasWifi,
+        Computer.HasLTE,
+        Computer.ReleaseDate,
+        Computer.Price,
+        Computer.VideoCard
+        FROM TutorialAppSchema.Computer";
+
+      IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
+
+      foreach (Computer computer in computers)
+      {
+        Console.WriteLine("'" + myComputer.Motherboard
+         + "','" + myComputer.HasWifi
+         + "','" + myComputer.HasLTE
+         + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
+         + "','" + myComputer.Price
+         + "','" + myComputer.VideoCard
+         + "'"
+       );
+      }
     }
-
   }
 }
