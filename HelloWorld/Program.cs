@@ -1,72 +1,66 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Dapper;
+using HelloWorld.Data;
 using HelloWorld.Models;
-using Microsoft.Data.SqlClient;
-using System.Data;
 
 namespace HelloWorld // Note: actual namespace depends on the project name.
 {
-  internal class Program
-  {
-    private static void Main(string[] args)
+    internal class Program
     {
-      string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true;";
+        private static void Main(string[] args)
+        {
+            DataContextDapper dapper = new DataContextDapper();
 
-      IDbConnection dbConnection = new SqlConnection(connectionString);
+            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
 
-      string sqlCommand = "SELECT GETDATE()";
+            Console.WriteLine(rightNow);
 
-      DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
+            Computer myComputer = new Computer()
+            {
+                Motherboard = "Z690",
+                HasWifi = true,
+                HasLTE = true,
+                ReleaseDate = DateTime.Now,
+                Price = 943.87m,
+                VideoCard = "RTX 2060"
+            };
 
-      Console.WriteLine(rightNow);
+            string sql = @"INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,HasWifi,HasLTE,ReleaseDate,Price,VideoCard
+                ) VALUES ('" + myComputer.Motherboard
+                + "','" + myComputer.HasWifi
+                + "','" + myComputer.HasLTE
+                + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
+                + "','" + myComputer.Price
+                + "','" + myComputer.VideoCard
+                + "')";
 
-      Computer myComputer = new Computer()
-      {
-        Motherboard = "Z690",
-        HasWifi = true,
-        HasLTE = true,
-        ReleaseDate = DateTime.Now,
-        Price = 943.87m,
-        VideoCard = "RTX 2060"
-      };
+            Console.WriteLine(sql);
 
-      string sql = @"INSERT INTO TutorialAppSchema.Computer (
-        Motherboard,HasWifi,HasLTE,ReleaseDate,Price,VideoCard
-       ) VALUES ('" + myComputer.Motherboard
-       + "','" + myComputer.HasWifi
-       + "','" + myComputer.HasLTE
-       + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
-       + "','" + myComputer.Price
-       + "','" + myComputer.VideoCard
-       + "')";
+            int result = dapper.ExecuteSqlWithRowCount(sql);
 
-      Console.WriteLine(sql);
+            Console.WriteLine(result);
 
-      int result = dbConnection.Execute(sql);
+            string sqlSelect = @"SELECT Computer.Motherboard,
+                Computer.HasWifi,
+                Computer.HasLTE,
+                Computer.ReleaseDate,
+                Computer.Price,
+                Computer.VideoCard
+                FROM TutorialAppSchema.Computer";
 
-      Console.WriteLine(result);
+            IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
-      string sqlSelect = @"SELECT Computer.Motherboard,
-        Computer.HasWifi,
-        Computer.HasLTE,
-        Computer.ReleaseDate,
-        Computer.Price,
-        Computer.VideoCard
-        FROM TutorialAppSchema.Computer";
-
-      IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
-
-      foreach (Computer computer in computers)
-      {
-        Console.WriteLine("'" + myComputer.Motherboard
-         + "','" + myComputer.HasWifi
-         + "','" + myComputer.HasLTE
-         + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
-         + "','" + myComputer.Price
-         + "','" + myComputer.VideoCard
-         + "'"
-       );
-      }
+            foreach (Computer computer in computers)
+            {
+                Console.WriteLine("'" + myComputer.Motherboard
+                 + "','" + myComputer.HasWifi
+                 + "','" + myComputer.HasLTE
+                 + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
+                 + "','" + myComputer.Price
+                 + "','" + myComputer.VideoCard
+                 + "'"
+               );
+            }
+        }
     }
-  }
 }
