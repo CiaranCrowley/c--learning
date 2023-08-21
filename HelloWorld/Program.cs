@@ -9,6 +9,7 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
         private static void Main(string[] args)
         {
             DataContextDapper dapper = new DataContextDapper();
+            DataContextEF entityFramework = new DataContextEF();
 
             DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
 
@@ -17,12 +18,16 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
             Computer myComputer = new Computer()
             {
                 Motherboard = "Z690",
+                CPUCores = 16,
                 HasWifi = true,
                 HasLTE = true,
                 ReleaseDate = DateTime.Now,
                 Price = 943.87m,
                 VideoCard = "RTX 2060"
             };
+
+            entityFramework.Add(myComputer);
+            entityFramework.SaveChanges();
 
             string sql = @"INSERT INTO TutorialAppSchema.Computer (
                 Motherboard,HasWifi,HasLTE,ReleaseDate,Price,VideoCard
@@ -40,7 +45,8 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
 
             Console.WriteLine(result);
 
-            string sqlSelect = @"SELECT Computer.Motherboard,
+            string sqlSelect = @"SELECT Computer.ComputerId,
+                Computer.Motherboard,
                 Computer.HasWifi,
                 Computer.HasLTE,
                 Computer.ReleaseDate,
@@ -52,14 +58,33 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
 
             foreach (Computer computer in computers)
             {
-                Console.WriteLine("'" + myComputer.Motherboard
-                 + "','" + myComputer.HasWifi
-                 + "','" + myComputer.HasLTE
-                 + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
-                 + "','" + myComputer.Price
-                 + "','" + myComputer.VideoCard
+                Console.WriteLine("'" + +computer.ComputerId
+                 + "','" + computer.Motherboard
+                 + "','" + computer.HasWifi
+                 + "','" + computer.HasLTE
+                 + "','" + computer.ReleaseDate.ToString("yyyy-MM-dd")
+                 + "','" + computer.Price
+                 + "','" + computer.VideoCard
                  + "'"
                );
+            }
+
+            IEnumerable<Computer>? computersEf = entityFramework.Computer?.ToList<Computer>();
+
+            if (computersEf != null)
+            {
+                foreach (Computer computer in computersEf)
+                {
+                    Console.WriteLine("'" + computer.ComputerId
+                     + "','" + computer.Motherboard
+                     + "','" + computer.HasWifi
+                     + "','" + computer.HasLTE
+                     + "','" + computer.ReleaseDate.ToString("yyyy-MM-dd")
+                     + "','" + computer.Price
+                     + "','" + computer.VideoCard
+                     + "'"
+                   );
+                }
             }
         }
     }
