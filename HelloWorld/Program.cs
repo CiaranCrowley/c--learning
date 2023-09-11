@@ -1,7 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using HelloWorld.Data;
 using HelloWorld.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace HelloWorld // Note: actual namespace depends on the project name.
 {
@@ -9,15 +7,6 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
     {
         private static void Main(string[] args)
         {
-            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
-            DataContextDapper dapper = new DataContextDapper(config);
-            DataContextEF entityFramework = new DataContextEF(config);
-
-            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
-
-            Console.WriteLine(rightNow);
-
             Computer myComputer = new Computer()
             {
                 Motherboard = "Z690",
@@ -29,66 +18,27 @@ namespace HelloWorld // Note: actual namespace depends on the project name.
                 VideoCard = "RTX 2060"
             };
 
-            entityFramework.Add(myComputer);
-            entityFramework.SaveChanges();
-
             string sql = @"INSERT INTO TutorialAppSchema.Computer (
                 Motherboard,HasWifi,HasLTE,ReleaseDate,Price,VideoCard
                 ) VALUES ('" + myComputer.Motherboard
                 + "','" + myComputer.HasWifi
                 + "','" + myComputer.HasLTE
-                + "','" + myComputer.ReleaseDate.ToString("yyyy-MM-dd")
+                + "','" + myComputer.ReleaseDate
                 + "','" + myComputer.Price
                 + "','" + myComputer.VideoCard
-                + "')";
+                + "')\n";
 
-            Console.WriteLine(sql);
+            File.WriteAllText(@"C:\Users\ciara\Documents\C Sharp\CSharp_Learning\HelloWorld\log.txt", "\n" + sql + "\n");
 
-            int result = dapper.ExecuteSqlWithRowCount(sql);
+            using StreamWriter openFile = new(@"C:\Users\ciara\Documents\C Sharp\CSharp_Learning\HelloWorld\log.txt", append: true);
 
-            Console.WriteLine(result);
+            openFile.WriteLine("\n" + sql + "\n");
 
-            string sqlSelect = @"SELECT Computer.ComputerId,
-                Computer.Motherboard,
-                Computer.HasWifi,
-                Computer.HasLTE,
-                Computer.ReleaseDate,
-                Computer.Price,
-                Computer.VideoCard
-                FROM TutorialAppSchema.Computer";
+            openFile.Close();
 
-            IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
+            string fileText = File.ReadAllText("log.txt");
 
-            foreach (Computer computer in computers)
-            {
-                Console.WriteLine("'" + +computer.ComputerId
-                 + "','" + computer.Motherboard
-                 + "','" + computer.HasWifi
-                 + "','" + computer.HasLTE
-                 + "','" + computer.ReleaseDate.ToString("yyyy-MM-dd")
-                 + "','" + computer.Price
-                 + "','" + computer.VideoCard
-                 + "'"
-               );
-            }
-
-            IEnumerable<Computer>? computersEf = entityFramework.Computer?.ToList<Computer>();
-
-            if (computersEf != null)
-            {
-                foreach (Computer computer in computersEf)
-                {
-                    Console.WriteLine("'" + computer.ComputerId
-                     + "','" + computer.Motherboard
-                     + "','" + computer.HasWifi
-                     + "','" + computer.HasLTE
-                     + "','" + computer.ReleaseDate.ToString("yyyy-MM-dd")
-                     + "','" + computer.Price
-                     + "','" + computer.VideoCard
-                     + "'"
-                   );
-                }
-            }
+            Console.WriteLine(fileText);
         }
     }
 }
